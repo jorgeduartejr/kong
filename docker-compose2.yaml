@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  kong:
+    image: kong/kong:latest
+    container_name: kong
+    environment:
+      KONG_DATABASE: off  # Desativa o uso de banco de dados
+      KONG_PROXY_LISTEN: "0.0.0.0:8000, 0.0.0.0:8443 ssl"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+      KONG_NGINX_DAEMON: "off"  # Evita que o NGINX rode como daemon
+    volumes:
+      - ./kong.conf:/usr/local/kong/kong.conf  # Arquivo de configuração do Kong
+      - ./config:/usr/local/kong/config  # Onde os arquivos de configuração (rotas, serviços) ficam
+    ports:
+      - "8000:8000"  # Proxy
+      - "8443:8443"  # Proxy com SSL
+      - "8001:8001"  # Admin
+      - "8444:8444"  # Admin com SSL
+    networks:
+      - kong_network
+
+networks:
+  kong_network:
+    driver: bridge

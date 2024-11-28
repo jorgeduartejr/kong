@@ -1,0 +1,15 @@
+{
+    "services": [
+      {
+        "name": "example-service",
+        "url": "http://example.com"
+      }
+    ],
+    "routes": [
+      {
+        "service": { "name": "example-service" },
+        "hosts": ["example.com"],
+        "paths": ["/example"]
+      }
+    ]
+}

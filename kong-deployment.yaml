@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong
+  namespace: kong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kong
+  template:
+    metadata:
+      labels:
+        app: kong
+    spec:
+      containers:
+      - name: kong
+        image: kong:latest
+        ports:
+        - name: proxy
+          containerPort: 8000
+        - name: proxy-ssl
+          containerPort: 8443
+        - name: admin
+          containerPort: 8001
+        - name: admin-ssl
+          containerPort: 8444
+        volumeMounts:
+        - name: kong-config-volume
+          mountPath: /etc/kong/kong.conf
+          subPath: kong.conf
+        env:
+        - name: KONG_CONF
+          value: "/etc/kong/kong.conf"
+      volumes:
+      - name: kong-config-volume
+        configMap:
+          name: kong-config
